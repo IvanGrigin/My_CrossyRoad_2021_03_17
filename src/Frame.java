@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Frame extends JFrame implements KeyEventDispatcher {
     public Man man;
     public ArrayList<Road> roads;
+    public ArrayList<Forest> forests;
 
     public Frame() {
         this.setTitle("Crossy_Road");
@@ -16,6 +17,7 @@ public class Frame extends JFrame implements KeyEventDispatcher {
 
         this.man = new Man(301, 941);
         this.roads = new ArrayList<>();
+        this.forests = new ArrayList<>();
         startRoads();
 
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -67,6 +69,10 @@ public class Frame extends JFrame implements KeyEventDispatcher {
         for (int i = 0; i < roads.size(); i = i + 1) {
             roads.get(i).drawRoad(g2d);
         }
+        for (int i = 0; i < forests.size(); i = i + 1) {
+            forests.get(i).drawRoad(g2d);
+        }
+
         man.drawMan(g2d);
 
 
@@ -86,19 +92,23 @@ public class Frame extends JFrame implements KeyEventDispatcher {
     public void startRoads() {
         roads.clear();
         int otstup = 101;
-        //roads.add(new Road(otstup, getWidth()));
+
         for(int i = 0; i < 40; i = i + 1){
             double d1 = Math.random();
             if(d1 > 0.66){
+                forests.add(new Forest(otstup + i * 20, getWidth()));
                 roads.add(new Road(otstup + (i+1) * 20, getWidth()));
                 roads.add(new Road(otstup + (i+2) * 20, getWidth()));
             }else if(d1 < 0.33){
                 roads.add(new Road(otstup + i * 20, getWidth()));
                 roads.add(new Road(otstup + (i+1) * 20, getWidth()));
+                forests.add(new Forest(otstup + (i+2) * 20, getWidth()));
             }else{
                 roads.add(new Road(otstup + i * 20, getWidth()));
+                forests.add(new Forest(otstup + (i+1) * 20, getWidth()));
                 roads.add(new Road(otstup + (i+2) * 20, getWidth()));
             }
+            forests.add(new Forest(otstup + (i+3) * 20, getWidth()));
             i = i + 3;
         }
     }

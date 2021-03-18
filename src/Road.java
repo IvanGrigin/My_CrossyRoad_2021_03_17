@@ -5,12 +5,14 @@ public class Road {
     int n = 8;
     public int y;
     public int width;
+    public int height;
     public int speed;
 
 
     public Road(int y0, int width0){
         this.y = y0;
         this.width = width0;
+        this.height = 20;
         cars = new Car[n];
         newCars(width0);
         int sign = 1;
@@ -31,6 +33,8 @@ public class Road {
         }
     }
     public void drawRoad(Graphics2D g2d){
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.fillRect(0, y, width, height);
         for(int i = 0; i < cars.length; i = i + 1){
             if(cars[i] != null) {
                 cars[i].drawCar(g2d, width);
