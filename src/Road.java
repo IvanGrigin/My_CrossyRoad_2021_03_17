@@ -32,15 +32,7 @@ public class Road {
             }
         }
     }
-    public void drawRoad(Graphics2D g2d){
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.fillRect(0, y, width, height);
-        for(int i = 0; i < cars.length; i = i + 1){
-            if(cars[i] != null) {
-                cars[i].drawCar(g2d, width);
-            }
-        }
-    }
+
     public void updateRoad(){
         for(int i = 0; i < cars.length; i = i + 1){
             if(cars[i] != null) {

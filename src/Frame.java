@@ -2,19 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Frame extends JFrame implements KeyEventDispatcher {
     public Man man;
     public ArrayList<Road> roads;
     public ArrayList<Forest> forests;
+    public Painter p;
+    public int numberOfLevel = 1;
+    public int numberOfDeath = 0;
 
-    public Frame() {
+    public Frame() throws IOException {
         this.setTitle("Crossy_Road");
         this.setSize(700, 1008);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
 
+        this.p = new Painter();
         this.man = new Man(301, 941);
         this.roads = new ArrayList<>();
         this.forests = new ArrayList<>();
@@ -40,12 +45,15 @@ public class Frame extends JFrame implements KeyEventDispatcher {
         }
         if ((man.x < 0) || (man.x > getWidth())) {
             man.start();
+            numberOfDeath = numberOfDeath +1;
         }
         if ((man.y > getHeight())) {
             man.start();
+            numberOfDeath = numberOfDeath + 1;
         }
         if (man.y < 21) {
             newGame();
+            numberOfLevel = numberOfLevel + 1;
         }
 
 
@@ -64,16 +72,20 @@ public class Frame extends JFrame implements KeyEventDispatcher {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.setColor(Color.BLACK);
-        g2d.drawRect(1, 30, getWidth() - 1, getHeight() - 1);
+        g2d.drawString(("Level: "+numberOfLevel),10,50 );
+        g2d.drawString(("Deaths: "+numberOfDeath),10,70 );
 
-        for (int i = 0; i < roads.size(); i = i + 1) {
-            roads.get(i).drawRoad(g2d);
-        }
-        for (int i = 0; i < forests.size(); i = i + 1) {
-            forests.get(i).drawRoad(g2d);
+        if((roads != null)&&(forests != null)&&(man != null)) {
+            for (int i = 0; i < forests.size(); i = i + 1) {
+                drawForest(g2d, forests.get(i));
+            }
+            for (int i = 0; i < roads.size(); i = i + 1) {
+                drawRoad(g2d, roads.get(i));
+            }
+            man.drawMan(g2d);
         }
 
-        man.drawMan(g2d);
+
 
 
         g.dispose();
@@ -85,6 +97,7 @@ public class Frame extends JFrame implements KeyEventDispatcher {
             roads.get(i).updateRoad();
             if (man.checkCollisionRoad(roads.get(i))) {
                 man.start();
+                numberOfDeath = numberOfDeath + 1;
             }
         }
     }
@@ -116,5 +129,30 @@ public class Frame extends JFrame implements KeyEventDispatcher {
     public void newGame() {
         man.start();
         startRoads();
+    }
+    public void drawCar(Graphics2D g2d, Car c){
+        /*
+        p.draw(g2d, c.x, c.y, c.w, c.h, "car", c.number);
+        p.draw(g2d, c.x - getWidth(), c.y, c.w, c.h, "car", c.number);
+        p.draw(g2d, c.x + getWidth(), c.y, c.w, c.h, "car", c.number);
+         */
+        g2d.setColor(Color.BLUE);
+        g2d.fillRect(c.x, c.y, c.w, c.h);
+        g2d.fillRect(c.x - getWidth(), c.y, c.w, c.h);
+        g2d.fillRect(c.x + getWidth(), c.y, c.w, c.h);
+
+    }
+    public void drawRoad(Graphics2D g2d, Road r){
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.fillRect(0, r.y, r.width, r.height);
+        for(int i = 0; i < r.cars.length; i = i + 1){
+            if(r.cars[i] != null) {
+                drawCar(g2d, r.cars[i]);
+            }
+        }
+    }
+    public void drawForest(Graphics2D g2d, Forest f) {
+        g2d.setColor(Color.GREEN);
+        g2d.fillRect(0, f.y, f.width, f.height);
     }
 }

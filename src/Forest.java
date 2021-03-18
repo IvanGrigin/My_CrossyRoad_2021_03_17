@@ -11,9 +11,4 @@ public class Forest {
         this.width = width0;
         this.height = 20;
     }
-
-    public void drawRoad(Graphics2D g2d) {
-        g2d.setColor(Color.GREEN);
-        g2d.fillRect(0, y, width, height);
-    }
 }

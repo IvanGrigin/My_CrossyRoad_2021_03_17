@@ -5,9 +5,11 @@ public class Car {
     public int y;
     public int w;
     public int h;
+    public int number;
     public Car(int x0, int y0){
         this.x = x0;
         this.y = y0;
+        number = 0;
         w = 38;
         h = 20;
     }
