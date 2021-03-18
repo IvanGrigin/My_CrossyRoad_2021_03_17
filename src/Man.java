@@ -20,8 +20,10 @@ public class Man {
     public boolean checkCollisionRoad(Road r){
         boolean ret = false;
         for (int i = 0; i < r.cars.length; i = i + 1){
-            if(checkCollisionCar(r.cars[i])){
-                ret = true;
+            if(r.cars[i] != null) {
+                if (checkCollisionCar(r.cars[i])) {
+                    ret = true;
+                }
             }
         }
         return ret;

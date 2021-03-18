@@ -15,10 +15,12 @@ public class Car {
         g2d.setColor(Color.BLUE);
         g2d.fillRect(x, y, w, h);
         g2d.fillRect(x - w0, y, w, h);
+        g2d.fillRect(x + w0, y, w, h);
 
     }
     public void updateState(int speed0, int w0){
         if(x > w0){ x = x - w0; }
+        if(x < 0){ x = x + w0; }
         this.x = (this.x + speed0);
     }
 

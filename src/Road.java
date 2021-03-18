@@ -22,18 +22,26 @@ public class Road {
     public void newCars(int width0){
         cars[0] = new Car(0, y);
         for (int i = 1; i < cars.length; i = i + 1) {
-            int d1 = (int)(Math.random()*(width0/(n))) + 15;
-            cars[i] = new Car(cars[i-1].x + cars[i-1].w + d1, y);
+            int d1 = (int)(Math.random()*(width0/(n))) + 25;
+            if (cars[i-1] != null) {
+                if (!(cars[i - 1].x + cars[i - 1].w + d1 > width0)) {
+                    cars[i] = new Car(cars[i - 1].x + cars[i - 1].w + d1, y);
+                }
+            }
         }
     }
     public void drawRoad(Graphics2D g2d){
         for(int i = 0; i < cars.length; i = i + 1){
-            cars[i].drawCar(g2d, width);
+            if(cars[i] != null) {
+                cars[i].drawCar(g2d, width);
+            }
         }
     }
     public void updateRoad(){
         for(int i = 0; i < cars.length; i = i + 1){
-            cars[i].updateState(speed, width);
+            if(cars[i] != null) {
+                cars[i].updateState(speed, width);
+            }
         }
     }
 }
