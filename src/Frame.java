@@ -9,6 +9,7 @@ public class Frame extends JFrame implements KeyEventDispatcher {
     public Man man;
     public ArrayList<Road> roads;
     public ArrayList<Forest> forests;
+    public ArrayList<River> rivers;
     public Painter p;
     public int numberOfLevel = 1;
     public int numberOfDeath = 0;
@@ -23,7 +24,8 @@ public class Frame extends JFrame implements KeyEventDispatcher {
         this.man = new Man(301, 941);
         this.roads = new ArrayList<>();
         this.forests = new ArrayList<>();
-        startRoads();
+        this.rivers = new ArrayList<>();
+        start();
 
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(this);
@@ -33,13 +35,13 @@ public class Frame extends JFrame implements KeyEventDispatcher {
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_PRESSED) { // Если кнопка была нажата (т.е. сейчас она зажата)
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            if ((e.getKeyCode() == KeyEvent.VK_LEFT)||(e.getKeyCode() == KeyEvent.VK_A)) {
                 man.x = man.x - man.speed;
-            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            } else if ((e.getKeyCode() == KeyEvent.VK_RIGHT)||(e.getKeyCode() == KeyEvent.VK_D)) {
                 man.x = man.x + man.speed;
-            } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+            } else if ((e.getKeyCode() == KeyEvent.VK_UP)||(e.getKeyCode() == KeyEvent.VK_W)) {
                 man.y = man.y - man.speed;
-            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            } else if ((e.getKeyCode() == KeyEvent.VK_DOWN)||(e.getKeyCode() == KeyEvent.VK_S)) {
                 man.y = man.y + man.speed;
             }
         }
@@ -55,8 +57,6 @@ public class Frame extends JFrame implements KeyEventDispatcher {
             newGame();
             numberOfLevel = numberOfLevel + 1;
         }
-
-
         return false;
     }
 
@@ -75,18 +75,18 @@ public class Frame extends JFrame implements KeyEventDispatcher {
         g2d.drawString(("Level: "+numberOfLevel),10,50 );
         g2d.drawString(("Deaths: "+numberOfDeath),10,70 );
 
-        if((roads != null)&&(forests != null)&&(man != null)) {
+        if((roads != null)&&(forests != null)&&(man != null)&&(rivers != null)) {
             for (int i = 0; i < forests.size(); i = i + 1) {
                 drawForest(g2d, forests.get(i));
             }
             for (int i = 0; i < roads.size(); i = i + 1) {
                 drawRoad(g2d, roads.get(i));
             }
+            for (int i = 0; i < rivers.size(); i = i + 1){
+                rivers.get(i).draw(g2d);
+            }
             man.drawMan(g2d);
         }
-
-
-
 
         g.dispose();
         bufferStrategy.show();
@@ -100,13 +100,21 @@ public class Frame extends JFrame implements KeyEventDispatcher {
                 numberOfDeath = numberOfDeath + 1;
             }
         }
+        for (int i = 0; i < rivers.size(); i = i + 1) {
+            if((man.y >= rivers.get(i).y )&&(man.y <= rivers.get(i).y + 10)) {
+                if (man.checkCollisionRiver(rivers.get(i))) {
+                    man.start();
+                    numberOfDeath = numberOfDeath + 1;
+                }
+            }
+        }
     }
 
-    public void startRoads() {
+    public void start() {
         roads.clear();
         int otstup = 101;
-
-        for(int i = 0; i < 40; i = i + 1){
+        int n = 39;
+        for(int i = 0; i < n; i = i + 1){
             double d1 = Math.random();
             if(d1 > 0.66){
                 forests.add(new Forest(otstup + i * 20, getWidth()));
@@ -121,14 +129,19 @@ public class Frame extends JFrame implements KeyEventDispatcher {
                 forests.add(new Forest(otstup + (i+1) * 20, getWidth()));
                 roads.add(new Road(otstup + (i+2) * 20, getWidth()));
             }
-            forests.add(new Forest(otstup + (i+3) * 20, getWidth()));
+            if(Math.random() > 0.5){
+                rivers.add(new River(otstup + (i + 3) * 20, getWidth()));
+                i = i + 1;
+            }
+            forests.add(new Forest(otstup + (i + 3) * 20, getWidth()));
             i = i + 3;
+
         }
     }
 
     public void newGame() {
         man.start();
-        startRoads();
+        start();
     }
     public void drawCar(Graphics2D g2d, Car c){
         /*

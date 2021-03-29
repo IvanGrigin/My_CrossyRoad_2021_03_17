@@ -35,6 +35,25 @@ public class Man {
             return false;
         }
     }
+    public boolean checkCollisionRiver(River r){
+        boolean ret = false;
+        for (int i = 0; i < r.bridges.size(); i = i + 1){
+            if(r.bridges.get(i) != null) {
+                if (checkCollisionBridge(r.bridges.get(i))) {
+                    ret = true;
+                }
+            }
+        }
+        return !ret;
+    }
+    public boolean checkCollisionBridge(Bridge b){
+        if((this.x < b.x + b.w)&&(this.x > b.x)&&(this.y + 2 < b.y + b.h)&&(this.y + 2 > b.y)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     public void start(){
         this.x = 301;
         this.y = 901;
